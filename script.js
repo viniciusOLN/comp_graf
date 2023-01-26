@@ -70,7 +70,7 @@ async function calculateIntersection(ray, i, j) {
             var normal = result[2];
             var viewer = camera.eye;
             //TODO: fazer o cálculo de phong e setar na variável colorF
-            var colorF = new Vec3(228 / 255., 44 / 255., 100 / 255.);
+            var colorF = new Vec3(210 / 255., 20 / 255., 20 / 255.);
             ctx.fillStyle = "rgb(" + Math.min(colorF.x, 1) * 255 + "," + Math.min(colorF.y, 1) * 255 + "," + Math.min(colorF.z, 1) * 255 + ")";
             ctx.fillRect(i, j, 1, 1);
 
@@ -106,7 +106,7 @@ async function renderCanvas() {
     //TODO:coloque uma função para especificar a câmera via interface
     camera = new Camera();
     camera.eye = new Vec3(0, 0, 15.);
-    camera.at = new Vec3(0, 0, 0);
+    camera.at = new Vec3(0, 0, 0); // mudar a posição da forma
     camera.up = new Vec3(0, 1., 0);
 
     await updateProgress(0);

@@ -73,6 +73,7 @@ Vec3.prototype.show = function() {
 
 //ids shape
 var sphere = 1;
+var cube = 2;
 
 function Camera(eye, at, up) {
     this.eye = eye;
@@ -127,8 +128,8 @@ function Shape() {
     this.rotate = new Vec3(0, 0, 0);
 }
 
-function Shape(name) {
-    this.geometry = sphere;
+function Shape(name, id) {
+    this.geometry = id;
     this.name = name;
     this.translate = new Vec3(0, 0, 0);
     this.scale = new Vec3(0, 0, 0);
@@ -183,6 +184,30 @@ Shape.prototype.transformMatrixVecInverse = function() {
     var Si = scaleMatrixI(this.scale.x, this.scale.y, this.scale.z);
     return multMatrix(Si, Ri);
 }
+function transformVector(vector, transformMatrix) {
+    var transformedVector = [0, 0, 0];
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            transformedVector[i] += vector[j] * transformMatrix[j][i];
+        }
+    }
+    return transformedVector;
+}
+
+function transformPoint(point, transformMatrix) {
+    var x = transformMatrix[0] * point[0] + transformMatrix[4] * point[1] + transformMatrix[8] * point[2] + transformMatrix[12];
+    var y = transformMatrix[1] * point[0] + transformMatrix[5] * point[1] + transformMatrix[9] * point[2] + transformMatrix[13];
+    var z = transformMatrix[2] * point[0] + transformMatrix[6] * point[1] + transformMatrix[10] * point[2] + transformMatrix[14];
+    var w = transformMatrix[3] * point[0] + transformMatrix[7] * point[1] + transformMatrix[11] * point[2] + transformMatrix[15];
+    
+    return [x/w, y/w, z/w];
+}
+
+function transformRay(ray, transformMatrix) {
+    var origin = transformPoint(ray.o, transformMatrix);
+    var direction = transformVector(ray.d, transformMatrix);
+    return new Ray(origin, direction);
+}
 
 Shape.prototype.testIntersectionRay = function(ray) {
     //salvando raio em coordenadas do mundo para calcular o parâmetro t
@@ -218,6 +243,40 @@ Shape.prototype.testIntersectionRay = function(ray) {
             return [true, point, normal, t_];
         }
 
+    }else if(this.geometry == cube){
+        //transformando raio para coordenadas locais do cubo
+        var inverseMatrix = this.transformMatrixInverse();
+        var ray_local = transformRay(ray, inverseMatrix);
+
+        var tmin = -Infinity;
+        var tmax = Infinity;
+
+        //calculando interseção com cada face do cubo
+        for (var i = 0; i < 3; i++) {
+            var invD = 1 / ray_local.d[i];
+            var t0 = (cube.min[i] - ray_local.o[i]) * invD;
+            var t1 = (cube.max[i] - ray_local.o[i]) * invD;
+            if (invD < 0) {
+                var temp = t0;
+                t0 = t1;
+                t1 = temp;
+            }
+            tmin = Math.max(tmin, t0);
+            tmax = Math.min(tmax, t1);
+            if (tmax <= tmin) {
+                return [false, null];
+            }
+        }
+
+        //transformando ponto de interseção e normal para coordenadas do mundo
+        var t = tmin;
+        var point_local = ray_local.getPoint(t);
+        var normal_local = getNormalForIntersection(point_local, cube);
+        var point_world = transformPoint(point_local, cube.transformMatrix);
+        var normal_world = transformVector(normal_local, cube.transformMatrix);
+
+        return [true, point_world, normal_world, t];
     }
+
     return [false, null];
 }
