@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -30,6 +31,7 @@ def nearest_intersected_object(objects, ray_origin, ray_direction):
 
 
 def render(viewpoint):
+    start = time.time()
     width = width_screen
     height = height_screen
 
@@ -92,8 +94,10 @@ def render(viewpoint):
                 direction = reflected(direction, normal_to_surface)
 
             image[i, j] = np.clip(color, 0, 1)
+        
         print("%d/%d" % (i + 1, height))
-
+    end = time.time()
+    print(f'tempo corrido do script: {round(end - start)} segundos') 
     plt.imsave('image.png', image)
 
 width_screen = int(input('digite a largura da imagem '))
