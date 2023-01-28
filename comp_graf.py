@@ -108,7 +108,7 @@ pointview = list(map(float, input('digite o ponto de visao da camera(ex: 0.5, 0,
 objects = [	
  	#{ 'geometry': 'cube', 'center': np.array([0.4, -0.50, -.5]), 'radius': 0.15, 'ambient': np.array([255, 0, 0]), 'diffuse': np.array([0, 0.6, 0]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 },
 	{ 'geometry': 'sphere', 'center': np.array([-0.3, 0, 0]), 'radius': 0.15, 'ambient': np.array([0, 0, 255]), 'diffuse': np.array([0, 0, 255]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 },	
-	{ 'geometry': 'plane', 'center': np.array([0, -9000, 0]), 'radius': 9000 - 0.7, 'ambient': np.array([0.1, 0.1, 0]), 'diffuse': np.array([0.6, 0.6, 0.6]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 },
+	{ 'geometry': 'plane', 'center': np.array([0, -9000, 0]), 'radius': 9000 - 0.7, 'ambient': np.array([0.1, 0.1, 255]), 'diffuse': np.array([0.40, 0.22, 0.11]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 },
 ]
 
 while True:
