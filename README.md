@@ -9,7 +9,9 @@ Ao ser executado, o código mostra um menu, para a adição de mais um elemento 
 incluindo o plano, que pode ser alterado a posição e afins.
 
 dados utilizados para a formação da imagem:
+
 Largura da imagem: 300
+
 Altura da imagem: 200
 
 Câmera: (10, 20, 60)
